@@ -20,7 +20,7 @@ var GenericDatasource = exports.GenericDatasource = function () {
         _classCallCheck(this, GenericDatasource);
 
         this.type = instanceSettings.type;
-        this.url = instanceSettings.url + "/kapacitor/v1/tasks";
+        this.url = instanceSettings.url + " ";
         this.name = instanceSettings.name;
         this.q = $q;
         this.backendSrv = backendSrv;
@@ -30,7 +30,7 @@ var GenericDatasource = exports.GenericDatasource = function () {
         if (typeof instanceSettings.basicAuth === 'string' && instanceSettings.basicAuth.length > 0) {
             this.headers['Authorization'] = instanceSettings.basicAuth;
         }
-        this.lodashLocal = require("lodash");
+        // this.lodashLocal = require("lodash");
     }
 
     _createClass(GenericDatasource, [{
@@ -75,7 +75,11 @@ var GenericDatasource = exports.GenericDatasource = function () {
 
                 console.log("The task data: " + JSON.stringify(tasks));
 
-                var columns = [{ "text": "S.No", "type": "number" }, { "text": "created", "type": "time" }, { "text": "dbrps", "type": "string" }, { "text": "id", "type": "string" }, { "text": "last-enabled", "type": "time" }, { "text": "modified", "type": "time" }, { "text": "status", "type": "string" }, { "text": "type", "type": "string" }, { "text": "script", "type": "string" }];
+                var columns = [{ "text": "S.No", "type": "string" }, { "text": "created", "type": "time" },
+                // {"text": "dbrps", "type": "string"},
+                { "text": "id", "type": "string" }, { "text": "last-enabled", "type": "time" }, { "text": "modified", "type": "time" }, { "text": "status", "type": "string" }, { "text": "type", "type": "string"
+                    // {"text": "script", "type": "string"},
+                }];
 
                 var rows = [];
 
@@ -103,16 +107,28 @@ var GenericDatasource = exports.GenericDatasource = function () {
                     }
 
                     if (toBeUsed) {
+
+                        var createdDate = new Date(task.created.substring(0, 19));
+                        var modifiedDate = new Date(task.modified.substring(0, 19));
+                        var lastEnabledDate = new Date(task["last-enabled"].substring(0, 19));
+
+                        console.log("Created Date: " + createdDate);
                         var row = [];
-                        row.push(snum);
-                        row.push(task.created);
-                        row.push(dbNames);
+                        row.push(parseInt(String(snum)));
+                        // row.push(createdDate.getFullYear()+"/"+(createdDate.getMonth()+1)+"/"+createdDate.getDay()+" "+createdDate.getDate());
+                        row.push(createdDate.toDateString());
+                        // row.push(dbNames);
+
+                        // var htmlId = "<html><head></head><body><iframe src=\"http://prod.chronograf.paytm.com/sources/1/tickscript/"+task.id+"\"  style=\"height:80%;width:50%\"></iframe><p>Alert ID</p></body></html>";
+                        // var htmlId = "<html><head></head><body><embed src=\"http://example.com/elements.html\"></embed><p>Alert ID</p></body></html>"
+                        // var htmlId = "<html><head></head><body><form action=\"\"><label for=\"fname\">First name:</label><br/><input type=\"text\" id=\"fname\" name=\"firstname\"><br/>Last name:<br/><input type=\"text\" name=\"lastname\"><br/><br/><input type=\"submit\" value=\"Submit\"></form></body></html>"
+
                         row.push(task.id);
-                        row.push(task["last-enabled"]);
-                        row.push(task.modified);
+                        row.push(lastEnabledDate.toDateString());
+                        row.push(modifiedDate.toDateString());
                         row.push(task.status);
                         row.push(task.type);
-                        row.push(task.script);
+                        // row.push(task.script);
                         rows.push(row);
 
                         snum++;
@@ -259,7 +275,11 @@ var GenericDatasource = exports.GenericDatasource = function () {
     }, {
         key: "getTagKeys",
         value: function getTagKeys(options) {
-            var tagKeys = [{ "text": "created", "type": "time" }, { "text": "dbrps", "type": "string" }, { "text": "id", "type": "string" }, { "text": "last-enabled", "type": "time" }, { "text": "modified", "type": "time" }, { "text": "status", "type": "string" }, { "text": "type", "type": "string" }, { "text": "script", "type": "string" }];
+            var tagKeys = [{ "text": "created", "type": "time" },
+            // {"text": "dbrps", "type": "string"},
+            { "text": "id", "type": "string" }, { "text": "last-enabled", "type": "time" }, { "text": "modified", "type": "time" }, { "text": "status", "type": "string" }, { "text": "type", "type": "string"
+                // {"text": "script", "type": "string"},
+            }];
 
             return tagKeys;
         }
